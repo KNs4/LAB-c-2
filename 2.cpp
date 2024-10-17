@@ -12,8 +12,8 @@ using namespace std;
 
 // Проверка на нечетное количество элементов
 void checkOddSize(int size) {
-    if (size % 2 == 0) {
-        throw invalid_argument("Количество элементов должно быть нечетным.");
+    if (size % 2 == 0) {  // Если размер четный
+        throw invalid_argument("Количество элементов должно быть нечетным.");  // Генерация исключения
     }
 }
 
@@ -46,37 +46,38 @@ void printContainer(const Container& container) {
 
 // Задание 2: Вставка последних 5 элементов дека перед пятым с конца элементом списка
 void insertDequeIntoList(deque<int>& D, list<int>& L) {
-    if (D.size() < 5 || L.size() < 5) {
-        throw invalid_argument("Оба контейнера должны содержать не менее 5 элементов.");
+    if (D.size() < 5 || L.size() < 5) {  // Проверка, достаточно ли элементов в контейнерах
+        throw invalid_argument("Оба контейнера должны содержать не менее 5 элементов.");  // Генерация исключения
     }
 
-    auto itL = L.end();
+    auto itL = L.end();  // Итератор на конец списка L
     advance(itL, -5);  // Сдвигаем итератор на 5 позиций назад от конца
 
+    // Вставляем последние 5 элементов дека перед пятым с конца элементом списка
     L.insert(itL, D.rbegin(), D.rbegin() + 5);  // Вставляем элементы
 }
 
 // Задание 3: Комбинирование двух списков в формате A1, B1, A2, B2, ..., AN, BN
 void combineLists(list<int>& L1, list<int>& L2) {
-    if (L1.size() != L2.size()) {
-        throw invalid_argument("Оба списка должны содержать одинаковое количество элементов.");
+    if (L1.size() != L2.size()) {  // Проверка, равны ли размеры списков
+        throw invalid_argument("Оба списка должны содержать одинаковое количество элементов.");  // Генерация исключения
     }
 
     list<int> result;  // Новый список для результата
 
-    auto it1 = L1.begin();
-    auto it2 = L2.begin();
+    auto it1 = L1.begin();  // Итератор для первого списка
+    auto it2 = L2.begin();  // Итератор для второго списка
 
     // Чередуем элементы из L1 и L2
     while (it1 != L1.end() && it2 != L2.end()) {
         result.push_back(*it1);  // Добавляем элемент из L1
         result.push_back(*it2);  // Добавляем элемент из L2
-        ++it1;
-        ++it2;
+        ++it1;  // Переход к следующему элементу в L1
+        ++it2;  // Переход к следующему элементу в L2
     }
 
     // Перезаписываем L2 с результатом
-    L2 = result;
+    L2 = result;  // Обновляем второй список
 }
 
 // Задание 4: Замена цифровых символов на подчеркивания
@@ -84,90 +85,99 @@ void replaceDigitsWithUnderscore() {
     while (true) {
         cout << "Введите набор символов (для завершения ввода нажмите Enter):" << endl;
 
-        string input;
+        string input;  // Переменная для хранения введенной строки
         getline(cin, input);  // Считываем строку целиком
 
-        ostream_iterator<char> outputIt(cout, "");
+        ostream_iterator<char> outputIt(cout, "");  // Итератор для вывода в консоль
 
         // Лямбда для проверки, является ли символ цифрой
         auto isDigit = [](char c) { return isdigit(c); };
 
-        replace_copy_if(input.begin(), input.end(), outputIt, isDigit, '_');  // Замена цифр
+        // Замена цифр на символы подчеркивания
+        replace_copy_if(input.begin(), input.end(), outputIt, isDigit, '_');
 
-        cout << "\nПродолжить ввод? (y/n): ";
-        string choice;
-        getline(cin, choice);
+        cout << "\nПродолжить ввод? (y/n): ";  // Запрос на продолжение ввода
+        string choice;  // Переменная для хранения выбора пользователя
+        getline(cin, choice);  // Считываем выбор
 
+        // Проверяем, хочет ли пользователь продолжить или выйти
         if (choice == "n" || choice == "N") {
-            break;
+            break;  // Выход из цикла
         } else if (choice != "y" && choice != "Y") {
-            cout << "Неверный ввод. Пожалуйста, введите 'y' для продолжения или 'n' для завершения.\n";
+            cout << "Неверный ввод. Пожалуйста, введите 'y' для продолжения или 'n' для завершения.\n";  // Обработка неверного ввода
         }
     }
 }
 
 // Задание 5: Вставка 0 после первого отрицательного и перед последним положительным
 void insertZeroInList(list<int>& L) {
+    // Находим первый отрицательный элемент
     auto firstNegative = find_if(L.begin(), L.end(), [](int x) { return x < 0; });
-    if (firstNegative != L.end()) {
+    if (firstNegative != L.end()) {  // Если найден первый отрицательный элемент
         L.insert(next(firstNegative), 0);  // Вставляем 0 после первого отрицательного
     }
 
+    // Находим последний положительный элемент
     auto lastPositive = find_if(L.rbegin(), L.rend(), [](int x) { return x > 0; });
-    if (lastPositive != L.rend()) {
+    if (lastPositive != L.rend()) {  // Если найден последний положительный элемент
         L.insert(lastPositive.base(), 0);  // Вставляем 0 перед последним положительным
     }
 
     cout << "Список после вставки нулей: ";
-    printContainer(L);
+    printContainer(L);  // Выводим измененный список
 }
 
 // Задание 6: Поменять местами первую и вторую половину каждого списка
 void swapAndRotateLists(list<int>& L1, list<int>& L2) {
-    if (L1.size() % 2 != 0 || L2.size() % 2 != 0) {
-        throw invalid_argument("Оба списка должны содержать четное количество элементов.");
+    if (L1.size() % 2 != 0 || L2.size() % 2 != 0) {  // Проверка, что размеры списков четные
+        throw invalid_argument("Оба списка должны содержать четное количество элементов.");  // Генерация исключения
     }
 
-    auto midL1 = L1.begin();
-    advance(midL1, L1.size() / 2);  // Середина списка L1
-    swap_ranges(L1.begin(), midL1, midL1);  // Меняем местами половины
+    auto midL1 = L1.begin();  // Итератор для середины списка L1
+    advance(midL1, L1.size() / 2);  // Находим середину списка L1
+    swap_ranges(L1.begin(), midL1, midL1);  // Меняем местами две половины списка L1
 
-    auto midL2 = L2.begin();
-    advance(midL2, L2.size() / 2);  // Середина списка L2
-    rotate(L2.begin(), midL2, L2.end());  // Переставляем элементы
+    auto midL2 = L2.begin();  // Итератор для середины списка L2
+    advance(midL2, L2.size() / 2);  // Находим середину списка L2
+    rotate(L2.begin(), midL2, L2.end());  // Переставляем элементы в списке L2
 
     cout << "L1 после swap_ranges: ";
-    printContainer(L1);
+    printContainer(L1);  // Выводим измененный список L1
 
     cout << "L2 после rotate: ";
-    printContainer(L2);
+    printContainer(L2);  // Выводим измененный список L2
 }
 
 // Функция для задания 1 (удвоение элементов)
 void task1() {
-    int n;
+    int n;  // Переменная для хранения количества элементов
     cout << "Введите количество элементов в контейнерах для задания 1 (нечетное число, >= 3): ";
-    cin >> n;
-    checkOddSize(n);
+    cin >> n;  // Считываем количество элементов
+    checkOddSize(n);  // Проверяем, что число нечетное
 
-    vector<int> V(n);
-    deque<int> D(n);
-    list<int> L(n);
+    vector<int> V(n);  // Вектор для хранения элементов
+    deque<int> D(n);  // Дек для хранения элементов
+    list<int> L(n);  // Список для хранения элементов
 
+    // Считываем элементы для вектора V
     cout << "Введите элементы для вектора V: ";
     for (int i = 0; i < n; ++i) cin >> V[i];
 
+    // Считываем элементы для дека D
     cout << "Введите элементы для дека D: ";
     for (int i = 0; i < n; ++i) cin >> D[i];
 
+    // Считываем элементы для списка L
     cout << "Введите элементы для списка L: ";
     auto it = L.begin();
     for (int i = 0; i < n; ++i, ++it) cin >> *it;
 
+    // Удваиваем элементы в контейнерах
     doubleFirstMiddleLast(V);
     doubleFirstMiddleLast(D);
     doubleFirstMiddleLast(L);
 
+    // Выводим удвоенные элементы
     cout << "Удвоенные элементы вектора: ";
     printContainer(V);
 
@@ -180,106 +190,113 @@ void task1() {
 
 // Функция для задания 2 (вставка дека в список)
 void task2() {
-    int n;
+    int n;  // Переменная для хранения количества элементов
     cout << "Введите количество элементов в деке D и списке L для задания 2 (не менее 5): ";
-    cin >> n;
-    if (n < 5) {
-        throw invalid_argument("Оба контейнера должны содержать не менее 5 элементов.");
+    cin >> n;  // Считываем количество элементов
+    if (n < 5) {  // Проверка, что число не менее 5
+        throw invalid_argument("Оба контейнера должны содержать не менее 5 элементов.");  // Генерация исключения
     }
 
-    deque<int> D(n);
-    list<int> L(n);
+    deque<int> D(n);  // Дек для хранения элементов
+    list<int> L(n);   // Список для хранения элементов
 
+    // Считываем элементы для дека D
     cout << "Введите элементы для дека D: ";
     for (int i = 0; i < n; ++i) cin >> D[i];
 
+    // Считываем элементы для списка L
     cout << "Введите элементы для списка L: ";
     auto it = L.begin();
     for (int i = 0; i < n; ++i, ++it) cin >> *it;
 
+    // Вставляем элементы дека в список
     insertDequeIntoList(D, L);
 
+    // Выводим измененный список
     cout << "Список после вставки: ";
     printContainer(L);
 }
 
 // Функция для задания 3 (комбинирование двух списков)
 void task3() {
-    int n;
+    int n;  // Переменная для хранения количества элементов
     cout << "Введите количество элементов в списках L1 и L2 для задания 3: ";
-    cin >> n;
+    cin >> n;  // Считываем количество элементов
 
-    list<int> L1(n);
-    list<int> L2(n);
+    list<int> L1(n);  // Первый список
+    list<int> L2(n);  // Второй список
 
+    // Считываем элементы для списка L1
     cout << "Введите элементы для списка L1: ";
     auto it1 = L1.begin();
     for (int i = 0; i < n; ++i, ++it1) cin >> *it1;
 
+    // Считываем элементы для списка L2
     cout << "Введите элементы для списка L2: ";
     auto it2 = L2.begin();
     for (int i = 0; i < n; ++i, ++it2) cin >> *it2;
 
+    // Комбинируем списки
     combineLists(L1, L2);
 
+    // Выводим комбинированный список L2
     cout << "L2 после комбинирования: ";
     printContainer(L2);
 }
 
 int main() {
-    setlocale(LC_ALL, "Russian");
+    setlocale(LC_ALL, "Russian");  // Установка локализации для вывода на русском языке
 
-    int taskNumber;
+    int taskNumber;  // Переменная для хранения номера задания
     cout << "Выберите задание (1-6): ";
-    cin >> taskNumber;
+    cin >> taskNumber;  // Считываем номер задания
 
+    // Вызов соответствующей функции в зависимости от номера задания
     switch (taskNumber) {
         case 1:
-            task1();
+            task1();  // Задание 1
             break;
         case 2:
-            task2();
+            task2();  // Задание 2
             break;
         case 3:
-            task3();
+            task3();  // Задание 3
             break;
         case 4:
-            replaceDigitsWithUnderscore();
+            replaceDigitsWithUnderscore();  // Задание 4
             break;
-        case 5:
-            {
-                int n;
-                cout << "Введите количество элементов в списке L для задания 5: ";
-                cin >> n;
+        case 5: {
+            int n;  // Переменная для хранения количества элементов в списке
+            cout << "Введите количество элементов в списке L для задания 5: ";
+            cin >> n;  // Считываем количество элементов
 
-                list<int> L(n);
-                cout << "Введите элементы для списка L: ";
-                for (auto& elem : L) cin >> elem;
+            list<int> L(n);  // Список для хранения элементов
+            cout << "Введите элементы для списка L: ";
+            for (auto& elem : L) cin >> elem;  // Считываем элементы списка
 
-                insertZeroInList(L);
+            insertZeroInList(L);  // Вставка нуля в список
             }
             break;
-        case 6:
-            {
-                int n;
-                cout << "Введите количество элементов в списках L1 и L2 для задания 6 (четное число): ";
-                cin >> n;
+        case 6: {
+            int n;  // Переменная для хранения количества элементов в списках
+            cout << "Введите количество элементов в списках L1 и L2 для задания 6 (четное число): ";
+            cin >> n;  // Считываем количество элементов
 
-                list<int> L1(n);
-                list<int> L2(n);
+            list<int> L1(n);  // Первый список
+            list<int> L2(n);  // Второй список
 
-                cout << "Введите элементы для списка L1: ";
-                for (auto& elem : L1) cin >> elem;
+            cout << "Введите элементы для списка L1: ";
+            for (auto& elem : L1) cin >> elem;  // Считываем элементы списка L1
 
-                cout << "Введите элементы для списка L2: ";
-                for (auto& elem : L2) cin >> elem;
+            cout << "Введите элементы для списка L2: ";
+            for (auto& elem : L2) cin >> elem;  // Считываем элементы списка L2
 
-                swapAndRotateLists(L1, L2);
+            swapAndRotateLists(L1, L2);  // Замена и вращение списков
             }
             break;
         default:
-            cout << "Неверный номер задания." << endl;
+            cout << "Неверный номер задания." << endl;  // Обработка неверного ввода задания
     }
 
-    return 0;
+    return 0;  // Возврат 0, завершение программы
 }
